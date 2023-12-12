@@ -51,8 +51,30 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // Media controls
+  let paused = false;
+  const playButton = document.getElementById("play");
+  playButton.addEventListener("click", () => {
+    paused = false;
+    animateParticles();
+    playButton.disabled = true;
+    pauseButton.disabled = false;
+  });
+  const pauseButton = document.getElementById("pause");
+  pauseButton.addEventListener("click", () => {
+    paused = true;
+    playButton.disabled = false;
+    pauseButton.disabled = true;
+  });
+  const resetButton = document.getElementById("reset");
+  resetButton.addEventListener("click", () => {
+    particles.length = 0;
+    createParticles();
+    if (paused) animateParticles();
+  });
+
   function animateParticles() {
-    requestAnimationFrame(animateParticles);
+    if (!paused) requestAnimationFrame(animateParticles);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for (const particle of particles) {
@@ -75,8 +97,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Initialize and start animation
+  // Initialize animation
   createParticles();
+  // Start animation
   animateParticles();
 
   // Resize canvas on window resize
