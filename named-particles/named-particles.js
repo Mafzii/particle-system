@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Set canvas dimensions
   canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  canvas.height = window.innerHeight - 72; // 72 is the height of the navbar
 
   // Particle class
   class Particle {
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function createParticles() {
     for (let i = 0; i < 100; i++) {
-      const radius = Math.random() * 5 + 1; // Random radius between 1 and 6
+      const radius = Math.random() * 5 + 5; // Random radius between 5 and 10
       const x = Math.random() * (canvas.width - radius * 2) + radius;
       const y = Math.random() * (canvas.height - radius * 2) + radius;
       const color = `rgba(${Math.random() * 255},${Math.random() * 255},${
@@ -73,13 +73,14 @@ document.addEventListener("DOMContentLoaded", function () {
     if (paused) animateParticles();
   });
 
+  // Animation loop
   function animateParticles() {
     if (!paused) requestAnimationFrame(animateParticles);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for (const particle of particles) {
       particle.update();
-
+      
       // Reflect off walls
       if (
         particle.x - particle.radius <= 0 ||
@@ -87,7 +88,6 @@ document.addEventListener("DOMContentLoaded", function () {
       ) {
         particle.velocity.x = -particle.velocity.x;
       }
-
       if (
         particle.y - particle.radius <= 0 ||
         particle.y + particle.radius >= canvas.height

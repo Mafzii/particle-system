@@ -1,0 +1,33 @@
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+canvas {
+  display: block;
+  background-color: black;
+}
+
+.media-controls {
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  background-color: black;
+  border-bottom: 2px solid green;
+}
+
+button {
+  height: 50px;
+  margin: 10px;
+  border-radius: 20px;
+  border: 0px solid green;
+  background-color: black;
+  color: green;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+button:disabled {
+  color: white;
+  cursor: default;
+}
