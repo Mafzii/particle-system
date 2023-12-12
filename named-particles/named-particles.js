@@ -7,9 +7,20 @@ document.addEventListener("DOMContentLoaded", function () {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight - 72; // 72 is the height of the navbar
 
+  // Mouse interactions
+  let mouse = {
+    x: undefined,
+    y: undefined,
+  };
+  canvas.addEventListener("mousemove", function (event) {
+    mouse.x = event.clientX;
+    mouse.y = event.clientY;
+  });
+
   // Particle class
   class Particle {
     constructor(x, y, radius, color, velocity) {
+      this.name = generateRandomName();
       this.x = x;
       this.y = y;
       this.radius = radius;
@@ -28,7 +39,51 @@ document.addEventListener("DOMContentLoaded", function () {
       this.draw();
       this.x += this.velocity.x;
       this.y += this.velocity.y;
+      if (this.isHovered(mouse.x, mouse.y)) {
+        ctx.font = "8px Arial";
+        ctx.fillStyle = "white";
+        ctx.fillText(this.name, this.x + this.radius, this.y - this.radius);
+      }
     }
+
+    // check if the mouse is hovering over the particle
+    isHovered(mouseX, mouseY) {
+      return (
+        mouseX > this.x - this.radius &&
+        mouseX < this.x + this.radius &&
+        mouseY > this.y - this.radius &&
+        mouseY < this.y + this.radius
+      );
+    }
+  }
+
+  // Random name generator for the particles
+  function generateRandomName() {
+    const adjectives = [
+      "Redish",
+      "Greenish",
+      "Bluish",
+      "Vibrant",
+      "Sunny",
+      "Mysterious",
+      "Gentle",
+      "Energetic",
+    ];
+    const nouns = [
+      "Particle",
+      "Orb",
+      "Sphere",
+      "Dot",
+      "Circle",
+      "Point",
+      "Speck",
+    ];
+
+    const randomAdjective =
+      adjectives[Math.floor(Math.random() * adjectives.length)];
+    const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
+
+    return `${randomAdjective} ${randomNoun}`;
   }
 
   // Particle array
@@ -80,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     for (const particle of particles) {
       particle.update();
-      
+
       // Reflect off walls
       if (
         particle.x - particle.radius <= 0 ||
