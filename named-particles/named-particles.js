@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Set canvas dimensions
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight - 72; // 72 is the height of the navbar
+  // ! changing this value will break the particle hover effect
 
   // Mouse interactions
   let mouse = {
