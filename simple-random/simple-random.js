@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Set canvas dimensions
   canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  canvas.height = window.innerHeight - 72; // 72 is the height of the navbar
 
   // Particle class
   class Particle {
@@ -35,8 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const particles = [];
 
   function createParticles() {
-    for (let i = 0; i < 100; i++) {
-      const radius = Math.random() * 5 + 1; // Random radius between 1 and 6
+    for (let i = 0; i < 10; i++) {
+      const radius = Math.random() * 5 + 5; // Random radius between 5 and 10
       const x = Math.random() * (canvas.width - radius * 2) + radius;
       const y = Math.random() * (canvas.height - radius * 2) + radius;
       const color = `rgba(${Math.random() * 255},${Math.random() * 255},${
@@ -50,28 +50,6 @@ document.addEventListener("DOMContentLoaded", function () {
       particles.push(new Particle(x, y, radius, color, velocity));
     }
   }
-
-  // Media controls
-  let paused = false;
-  const playButton = document.getElementById("play");
-  playButton.addEventListener("click", () => {
-    paused = false;
-    animateParticles();
-    playButton.disabled = true;
-    pauseButton.disabled = false;
-  });
-  const pauseButton = document.getElementById("pause");
-  pauseButton.addEventListener("click", () => {
-    paused = true;
-    playButton.disabled = false;
-    pauseButton.disabled = true;
-  });
-  const resetButton = document.getElementById("reset");
-  resetButton.addEventListener("click", () => {
-    particles.length = 0;
-    createParticles();
-    if (paused) animateParticles();
-  });
 
   // Animation loop
   function animateParticles() {
@@ -96,6 +74,28 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   }
+
+  // Media controls
+  let paused = false;
+  const playButton = document.getElementById("play");
+  playButton.addEventListener("click", () => {
+    paused = false;
+    animateParticles();
+    playButton.disabled = true;
+    pauseButton.disabled = false;
+  });
+  const pauseButton = document.getElementById("pause");
+  pauseButton.addEventListener("click", () => {
+    paused = true;
+    playButton.disabled = false;
+    pauseButton.disabled = true;
+  });
+  const resetButton = document.getElementById("reset");
+  resetButton.addEventListener("click", () => {
+    particles.length = 0;
+    createParticles();
+    if (paused) animateParticles();
+  });
 
   // Initialize animation
   createParticles();

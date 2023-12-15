@@ -9,10 +9,11 @@ canvas {
 }
 
 .media-controls {
+  width: 100vw;
   display: flex;
   justify-content: center;
   background-color: black;
-  border-bottom: 2px solid green;
+  border-top: 2px solid green;
 }
 
 button {
