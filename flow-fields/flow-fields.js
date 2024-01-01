@@ -26,6 +26,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     update() {
       this.draw();
+      const flowFieldX = Math.floor(this.x / resolution);
+      const flowFieldY = Math.floor(this.y / resolution);
+      this.velocity = flowField[flowFieldX % cols][flowFieldY % rows];
       this.x += this.velocity.x;
       this.y += this.velocity.y;
     }
@@ -33,15 +36,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Flow field array 
   // * Continue by creating a flow field array with vectors sectioned off to 4 distinct regions
+  // * Higher resolution means less cols and rows
   const flowField = [];
-  const resolution = 10; // 10x10 grid
+  const resolution = 200; // 10x10 grid
   const cols = Math.floor(canvas.width / resolution);
   const rows = Math.floor(canvas.height / resolution);
   // Fill flowField with vectors
   for (let i = 0; i < cols; i++) {
     flowField[i] = [];
     for (let j = 0; j < rows; j++) {
-      flowField[i][j] = { x: 1, y: 0 };
+      flowField[i][j] = { x: Math.random(), y: Math.random() };
     }
   }
 
@@ -50,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const particles = [];
 
   function createParticles() {
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 1000; i++) {
       const radius = 2; // Fixed radius of 2
       const x = Math.random() * (canvas.width - radius * 2) + radius;
       const y = Math.random() * (canvas.height - radius * 2) + radius;
@@ -58,7 +62,9 @@ document.addEventListener("DOMContentLoaded", function () {
         Math.random() * 255
       },0.8)`;
       // make velocity according to flow field
-      const velocity = flowField[Math.floor(x / resolution)][Math.floor(y / resolution)];
+      const flowFieldX = Math.floor(x / resolution);
+      const flowFieldY = Math.floor(y / resolution);
+      const velocity = flowField[flowFieldX % cols][flowFieldY % rows];
 
       particles.push(new Particle(x, y, radius, color, velocity));
     }
@@ -70,20 +76,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     for (const particle of particles) {
       particle.update();
-      
-      // Reflect off walls
-      if (
-        particle.x - particle.radius <= 0 ||
-        particle.x + particle.radius >= canvas.width
-      ) {
-        particle.velocity.x = -particle.velocity.x;
-      }
-      if (
-        particle.y - particle.radius <= 0 ||
-        particle.y + particle.radius >= canvas.height
-      ) {
-        particle.velocity.y = -particle.velocity.y;
-      }
     }
   }
 
