@@ -41,16 +41,41 @@ document.addEventListener("DOMContentLoaded", function () {
   // * Continue by creating a flow field array with vectors sectioned off to 4 distinct regions
   // * Higher resolution means less cols and rows
   const flowField = [];
-  const resolution = 10; // 10x10 grid
+  const resolution = Math.floor(canvas.width*0.01); // 10x10 grid
   const cols = Math.floor(canvas.width / resolution);
   const rows = Math.floor(canvas.height / resolution);
+  let angle = Math.PI * 0.25;
   // Fill flowField with vectors
   for (let i = 0; i < cols; i++) {
     flowField[i] = [];
     for (let j = 0; j < rows; j++) {
-      flowField[i][j] = { x: Math.random() * 2 - 1, y: Math.random() };
+      angle = 
+      flowField[i][j] = angle;
     }
   }
+
+  // Draw flow field vectors
+  function drawFlowField() {
+    for (let i = 0; i < cols; i++) {
+      for (let j = 0; j < rows; j++) {
+        const x = i * resolution;
+        const y = j * resolution;
+        const angle = flowField[i][j];
+        const lineLength = 5;
+        const x2 = x + Math.cos(angle) * lineLength;
+        const y2 = y + Math.sin(angle) * lineLength;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.arc(x, y, 1, 0, Math.PI * 2, false);
+        ctx.fillStyle = "#5f5f5f";
+        ctx.fill();
+        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = "#5f5f5f";
+        ctx.stroke();
+      }
+    }
+  }
+  drawFlowField();
 
 
   // Particle array
@@ -75,7 +100,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Animation loop
   function animateParticles() {
-    console.log(particles[0].velocity);
 
     if (!paused) requestAnimationFrame(animateParticles);
 
