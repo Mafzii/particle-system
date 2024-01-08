@@ -30,8 +30,8 @@ document.addEventListener("DOMContentLoaded", function () {
       const flowFieldY = Math.floor(this.y / resolution);
       const currField = flowField[flowFieldX % cols][flowFieldY % rows];
       // smooth the velocity update
-      this.velocity.x += (currField.x - this.velocity.x) * 0.05;
-      this.velocity.y += (currField.y - this.velocity.y) * 0.05;
+      this.velocity.x += (currField.x - this.velocity.x);
+      this.velocity.y += (currField.y - this.velocity.y);
       this.x += this.velocity.x;
       this.y += this.velocity.y;
     }
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
   for (let i = 0; i < cols; i++) {
     flowField[i] = [];
     for (let j = 0; j < rows; j++) {
-      angle = 
+      angle = Math.PI * i / cols;
       flowField[i][j] = angle;
     }
   }
@@ -92,7 +92,11 @@ document.addEventListener("DOMContentLoaded", function () {
       // make velocity according to flow field
       const flowFieldX = Math.floor(x / resolution);
       const flowFieldY = Math.floor(y / resolution);
-      const velocity = flowField[flowFieldX % cols][flowFieldY % rows];
+      const angle = flowField[flowFieldX % cols][flowFieldY % rows];
+      const velocity = {
+        x: Math.cos(angle),
+        y: Math.sin(angle),
+      };
 
       particles.push(new Particle(x, y, radius, color, velocity));
     }
