@@ -3,82 +3,44 @@ document.addEventListener("DOMContentLoaded", function () {
   const canvas = document.getElementById("particleCanvas");
   const ctx = canvas.getContext("2d");
 
-  // Set canvas dimensions
+  // Canvas settings
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight - 72; // 72 is the height of the navbar
+  ctx.fillStyle = "white";
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 1;
 
   // Particle class
   class Particle {
-    constructor(x, y, radius, color, velocity) {
-      this.x = x;
-      this.y = y;
-      this.radius = radius;
-      this.color = color;
-      this.velocity = velocity;
+    constructor(effect) {
+      this.effect = effect;
+      this.x = Math.floor(Math.random() * this.effect.width);
+      this.y = Math.floor(Math.random() * this.effect.height);
     }
 
-    draw() {
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-      ctx.fillStyle = this.color;
-      ctx.fill();
-    }
-
-    update() {
-      this.draw();
-      const flowFieldX = Math.floor(this.x / resolution);
-      const flowFieldY = Math.floor(this.y / resolution);
-      this.velocity = flowField[flowFieldX % cols][flowFieldY % rows];
-      this.x += this.velocity.x;
-      this.y += this.velocity.y;
+    draw(context) {
+      context.fillRect(this.x, this.y, 1, 1);
     }
   }
 
-  // Flow field array 
-  // * Continue by creating a flow field array with vectors sectioned off to 4 distinct regions
-  // * Higher resolution means less cols and rows
-  const flowField = [];
-  const resolution = 200; // 10x10 grid
-  const cols = Math.floor(canvas.width / resolution);
-  const rows = Math.floor(canvas.height / resolution);
-  // Fill flowField with vectors
-  for (let i = 0; i < cols; i++) {
-    flowField[i] = [];
-    for (let j = 0; j < rows; j++) {
-      flowField[i][j] = { x: Math.random(), y: Math.random() };
+  class Effect {
+    constructor(width, height) {
+      this.width = width;
+      this.height = height;
+      this.particles = [];
+    }
+
+    init() {
+      this.particles.push(new Particle(this));
     }
   }
 
+  // Create the effect
+  const effect = new Effect(canvas.width, canvas.height);
+  effect.init();
+  console.log(effect);
 
-  // Particle array
-  const particles = [];
-
-  function createParticles() {
-    for (let i = 0; i < 1000; i++) {
-      const radius = 2; // Fixed radius of 2
-      const x = Math.random() * (canvas.width - radius * 2) + radius;
-      const y = Math.random() * (canvas.height - radius * 2) + radius;
-      const color = `rgba(${Math.random() * 255},${Math.random() * 255},${
-        Math.random() * 255
-      },0.8)`;
-      // make velocity according to flow field
-      const flowFieldX = Math.floor(x / resolution);
-      const flowFieldY = Math.floor(y / resolution);
-      const velocity = flowField[flowFieldX % cols][flowFieldY % rows];
-
-      particles.push(new Particle(x, y, radius, color, velocity));
-    }
-  }
-
-  // Animation loop
-  function animateParticles() {
-    if (!paused) requestAnimationFrame(animateParticles);
-
-    for (const particle of particles) {
-      particle.update();
-    }
-  }
-
+// ! legacy code to be integrated into the new code
   // Media controls
   let paused = false;
   const playButton = document.getElementById("play");
@@ -101,11 +63,6 @@ document.addEventListener("DOMContentLoaded", function () {
     createParticles();
     if (paused) animateParticles();
   });
-
-  // Initialize animation
-  createParticles();
-  // Start animation
-  animateParticles();
 
   // Resize canvas on window resize
   window.addEventListener("resize", function () {

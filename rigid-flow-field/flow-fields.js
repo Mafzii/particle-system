@@ -28,10 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
       this.draw();
       const flowFieldX = Math.floor(this.x / resolution);
       const flowFieldY = Math.floor(this.y / resolution);
-      const currField = flowField[flowFieldX % cols][flowFieldY % rows];
-      // smooth the velocity update
-      this.velocity.x += (currField.x - this.velocity.x);
-      this.velocity.y += (currField.y - this.velocity.y);
+      this.velocity = flowField[flowFieldX % cols][flowFieldY % rows];
       this.x += this.velocity.x;
       this.y += this.velocity.y;
     }
@@ -41,48 +38,23 @@ document.addEventListener("DOMContentLoaded", function () {
   // * Continue by creating a flow field array with vectors sectioned off to 4 distinct regions
   // * Higher resolution means less cols and rows
   const flowField = [];
-  const resolution = Math.floor(canvas.width*0.01); // 10x10 grid
+  const resolution = 200; // 10x10 grid
   const cols = Math.floor(canvas.width / resolution);
   const rows = Math.floor(canvas.height / resolution);
-  let angle = Math.PI * 0.25;
   // Fill flowField with vectors
   for (let i = 0; i < cols; i++) {
     flowField[i] = [];
     for (let j = 0; j < rows; j++) {
-      angle = Math.PI * i / cols;
-      flowField[i][j] = angle;
+      flowField[i][j] = { x: Math.random(), y: Math.random() };
     }
   }
-
-  // Draw flow field vectors
-  function drawFlowField() {
-    for (let i = 0; i < cols; i++) {
-      for (let j = 0; j < rows; j++) {
-        const x = i * resolution;
-        const y = j * resolution;
-        const angle = flowField[i][j];
-        const lineLength = 5;
-        const x2 = x + Math.cos(angle) * lineLength;
-        const y2 = y + Math.sin(angle) * lineLength;
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-        ctx.arc(x, y, 1, 0, Math.PI * 2, false);
-        ctx.fillStyle = "#5f5f5f";
-        ctx.fill();
-        ctx.lineTo(x2, y2);
-        ctx.strokeStyle = "#5f5f5f";
-        ctx.stroke();
-      }
-    }
-  }
-  drawFlowField();
 
 
   // Particle array
   const particles = [];
 
   function createParticles() {
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 1000; i++) {
       const radius = 2; // Fixed radius of 2
       const x = Math.random() * (canvas.width - radius * 2) + radius;
       const y = Math.random() * (canvas.height - radius * 2) + radius;
@@ -92,11 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // make velocity according to flow field
       const flowFieldX = Math.floor(x / resolution);
       const flowFieldY = Math.floor(y / resolution);
-      const angle = flowField[flowFieldX % cols][flowFieldY % rows];
-      const velocity = {
-        x: Math.cos(angle),
-        y: Math.sin(angle),
-      };
+      const velocity = flowField[flowFieldX % cols][flowFieldY % rows];
 
       particles.push(new Particle(x, y, radius, color, velocity));
     }
@@ -104,7 +72,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Animation loop
   function animateParticles() {
-
     if (!paused) requestAnimationFrame(animateParticles);
 
     for (const particle of particles) {
