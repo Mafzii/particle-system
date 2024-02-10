@@ -6,8 +6,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // Canvas settings
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight - 72; // 72 is the height of the navbar
-  ctx.fillStyle = "white";
-  ctx.strokeStyle = "white";
   ctx.lineWidth = 1;
   let paused = false;
 
@@ -15,6 +13,9 @@ document.addEventListener("DOMContentLoaded", function () {
   class Particle {
     constructor(effect) {
       this.effect = effect;
+      this.color = `rgba(${Math.random() * 255},${Math.random() * 255},${
+        Math.random() * 255
+      },0.8)`; // Random color
       this.x = Math.floor(Math.random() * this.effect.width);
       this.y = Math.floor(Math.random() * this.effect.height);
       this.velocity = {
@@ -29,6 +30,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     draw(context) {
       context.fillRect(this.x, this.y, 1, 1);
+      context.strokeStyle = this.color;
+      context.fillStyle = this.color;
       context.beginPath();
       context.moveTo(this.history[0].x, this.history[0].y);
       for (const element of this.history) {
@@ -78,8 +81,8 @@ document.addEventListener("DOMContentLoaded", function () {
       this.cols = 0;
       this.rows = 0;
       this.flowField = [];
-      this.curve = 2.5;
-      this.zoom = 0.1;
+      this.curve = 3;
+      this.zoom = 0.05;
       this.init();
     }
     init() {
